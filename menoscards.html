@@ -28,6 +28,8 @@
             justify-content: center;
             text-align: center;
             transition: transform 0.3s ease;
+            position: relative; /* Para o efeito de descrição */
+            overflow: hidden; /* Para evitar que a descrição transborde */
         }
         
         /* Efeito hover para melhor UX */
@@ -42,6 +44,7 @@
             height: auto;
             margin-bottom: 10px;
             border-radius: 6px;
+            transition: opacity 0.3s ease; /* Transição de opacidade */
         }
 
         /* Estilo do resultado */
@@ -52,19 +55,29 @@
 
         .descricao {
             display: none; /* Mantém a descrição oculta na lista */
-        }
-
-        #result ul {
-            padding-left: 0;
-            list-style-type: none;
-        }
-
-        #result li {
-            border: 1px solid #ddd;
+            position: absolute;
+            top: 50%; /* Posiciona no centro */
+            left: 50%;
+            transform: translate(-50%, -50%) rotateY(0); /* Centraliza e não gira */
+            backface-visibility: hidden; /* Evita mostrar o verso */
+            z-index: 10; /* Para garantir que fique acima da imagem */
+            background-color: rgba(255, 255, 255, 0.9); /* Fundo semi-transparente */
             padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            border-radius: 8px; /* Cantos arredondados para a descrição */
+        }
+
+        .show-descricao {
+            display: block; /* Mostra a descrição */
+            animation: rotate 0.5s forwards; /* Aplica a animação de rotação */
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, -50%) rotateY(-90deg); /* Gira a partir de -90 graus */
+            }
+            to {
+                transform: translate(-50%, -50%) rotateY(0); /* Finaliza na posição original */
+            }
         }
 
         /* Ajuste de botões */
@@ -95,6 +108,7 @@
             }
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -109,14 +123,14 @@
             <img src="card1.png" alt="Imagem 1"/>
             <p class="item-text">O Mago</p>
             <span class="descricao">
-                O Mago: Esta carta representa o poder da manifestação e a habilidade de transformar ideias em realidade. Com todos os elementos do Tarot em sua mesa, O Mago simboliza a confiança, a astúcia e a destreza. Ele é um mestre da comunicação e usa sua vontade e recursos para criar mudanças significativas. O Mago nos inspira a agir com determinação e a utilizar nossas habilidades para alcançar nossos objetivos. Quando aparece em uma leitura, sugere que o momento é propício para iniciar novos projetos e que você tem a capacidade de realizar seus sonhos.
+                O Mago: Esta carta representa o poder da manifestação e a habilidade de transformar ideias em realidade...
             </span>
         </li>
         <li>
             <img src="card2.png" alt="Imagem 2"/>
             <p class="item-text">A Sacerdotisa</p>
             <span class="descricao">
-                A Sacerdotisa: Esta carta simboliza a intuição, o mistério e o conhecimento profundo. A Sacerdotisa é uma guardiã da sabedoria espiritual e representa o acesso a verdades ocultas e à sabedoria interior. Ela nos encoraja a confiar em nossa intuição e a explorar o inconsciente. Quando aparece em uma leitura, indica que é um momento de reflexão, introspecção e conexão com a espiritualidade. A Sacerdotisa convida você a olhar além das aparências e a buscar respostas dentro de si, revelando que o conhecimento mais profundo está à sua disposição.
+                A Sacerdotisa: Esta carta simboliza a intuição, o mistério e o conhecimento profundo...
             </span>
         </li>
         <li>
@@ -186,6 +200,20 @@
             // Atualizando o conteúdo do resultado
             document.getElementById('result').innerHTML = resultHTML;
         }
+
+        // jQuery para mostrar a descrição com efeito de girar
+        $(document).ready(function() {
+            $('#itemList li').hover(
+                function() {
+                    $(this).find('.descricao').addClass('show-descricao');
+                    $(this).find('img').css('opacity', '0.2'); // Reduz a opacidade da imagem
+                },
+                function() {
+                    $(this).find('.descricao').removeClass('show-descricao');
+                    $(this).find('img').css('opacity', '1'); // Restaura a opacidade da imagem
+                }
+            );
+        });
     </script>
     
 </body>
